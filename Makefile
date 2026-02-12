@@ -1,17 +1,42 @@
-CC=gcc
-CFLAGS=-Wall -Wextra
+# Compiler Basics
+CC = gcc
+CFLAGS = -fanalyser
+CWARN = -Wall -Werror -Wextra
 
-bridge: main.o cards.o game.o
-	$(CC) -fanalyzer -o $@ main.o cards.o game.o
+# Source & objects
+SRCS = cards.c game.c main.c
+OBJS = $(SRCS:.c=.o)
+BIN = bridge
 
-game.o: defs.h cards.h game.h game.c
-	$(CC) -fanalyzer -c game.c
+# Buid settings
+OUTDIR = build
+DBGDIR = debug
+BUILDDIR =
 
-cards.o: defs.h cards.h cards.c
-	$(CC) -fanalyzer -c cards.c
 
-main.o: main.c cards.o
-	$(CC) -fanalyzer -c main.c
+DEBUG?=0
+ifeq ($(DEBUG), 1)
+    CFLAGS := -g $(CFLAGS)
+    BUILDDIR = $(DBGDIR)
+else
+    BUILDDIR = $(OUTDIR)
+endif
+
+BIN := $(BUILDDIR)/$(BIN)
+
+.PHONY: all
+
+all: $(BIN)
+
+$(BIN): $(OBJS)
+	mkdir -p $(BUILDDIR)
+	$(CC) -o $@ $^ $(CWARN)
+
+%.o: %.c
+	$(CC) -c $(SRCS)
+
+.PHONY: clean
 
 clean:
-	rm bridge main.o cards.o game.o
+	rm -f $(BIN) $(OBJS)
+	rmdir $(BUILDDIR)
