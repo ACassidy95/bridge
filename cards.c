@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "cards.h"
 
 card_t init_card(uint8_t rank, char suit) {
@@ -38,7 +39,8 @@ const char* card_info(card_t card) {
                 sprintf(buffer, "|%2c\\%2c|", 'A', card.suit);
                 break;
         default:
-                return NULL;
+                sprintf(buffer, "|ERROR|");
+                break;
         }
 
         return buffer;
@@ -60,10 +62,12 @@ deck_t* init_deck() {
                 return NULL;
         }
 
-        for(size_t i = B_STD_MIN_CARD_RANK; i <= B_STD_MAX_CARD_RANK; ++i) {
+        for(size_t i = 0; i <= B_STD_MAX_CARD_RANK - B_STD_MIN_CARD_RANK; ++i) {
                 for(size_t j = 0; j < sizeof(B_STD_CARD_SUITS) / sizeof(B_STD_CARD_SUITS[0]); ++j) {
-                        card_t c = init_card(i, B_STD_CARD_SUITS[j][0]);
-                        d->cards[i * (B_STD_MAX_CARD_RANK - B_STD_MIN_CARD_RANK) + j] = c;
+                        card_t c = init_card(i + B_STD_MIN_CARD_RANK, B_STD_CARD_SUITS[j][0]);
+                        size_t idx = i * (sizeof(B_STD_CARD_SUITS) / sizeof(B_STD_CARD_SUITS[0])) + j;
+                        
+                        d->cards[idx] = c;
                         d->size++;
                 }
         }
@@ -84,7 +88,7 @@ const char* deck_info(deck_t* deck) {
 
         buffer = (char*)malloc(deck->size * CARD_INFO_BUFFER_SIZE);
 
-        for(size_t i = 0; i <= deck->size; ++i) {
+        for(size_t i = 0; i < deck->size; ++i) {
                 const char* ci = card_info(deck->cards[i]);
                 strncat(buffer, ci, CARD_INFO_BUFFER_SIZE);
                 free((char*)ci);
