@@ -8,6 +8,7 @@
 #define B_STD_MIN_CARD_RANK     2
 #define B_STD_MAX_CARD_RANK     14
 
+// Standad Bridge suits in order of value increasing
 static const char* B_STD_CARD_SUITS[4] = {
         "CLUBS",
         "DIAMONDS",
@@ -15,6 +16,7 @@ static const char* B_STD_CARD_SUITS[4] = {
         "SPADES"
 };
 
+// Standard Bride bids in order of value increasing
 static const char* B_STD_BID_SUITS[5] = {
         "CLUBS",
         "DIAMONDS",
@@ -23,7 +25,7 @@ static const char* B_STD_BID_SUITS[5] = {
         "NO TRUMP"
 };
 
-// Declare basic structures required for a bridge game
+// Declare basic structures
 struct  card;
 struct  deck;
 struct  hand;
