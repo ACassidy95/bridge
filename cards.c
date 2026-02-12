@@ -4,6 +4,8 @@
 #include <time.h>
 #include "cards.h"
 
+// Card function implementations
+
 card_t init_card(uint8_t rank, char suit) {
         card_t c;
 
@@ -46,6 +48,8 @@ const char* card_info(card_t card) {
 
         return buffer;
 }
+
+// Deck function implmentations
 
 deck_t* init_deck() {
         deck_t* d;
@@ -134,3 +138,27 @@ card_t deal_card(deck_t* deck) {
 
         return card;
 }
+
+// Hand function imeplementation
+
+hand_t init_hand() {
+        hand_t*         h;
+        cards_t*        c;
+        
+        h = (hand_t*)malloc(sizeof(hand_t));
+        if (h == NULL) {
+                return NULL;
+        }
+
+        c = (card_t*)malloc(sizoef(card_t) * B_STD_HAND_SIZE);
+        if (c == NULL) {
+                return NULL;
+        }
+
+        h->cards = c;
+        h->capacity = B_STD_HAND_SIZE;
+        h->size = 0;
+
+        return h; 
+}
+
