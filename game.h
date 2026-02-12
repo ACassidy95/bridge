@@ -3,11 +3,13 @@
 
 #include "defs.h"
 
+#define PLAYER_NAME_MAX_SIZE 32
+
 // Structure implementations
 
 struct player{
         const char*     name;
-        card_t*         hand      
+        card_t*         hand;      
 };
 
 static struct player player_default = { NULL, NULL };
