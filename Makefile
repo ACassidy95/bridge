@@ -1,6 +1,6 @@
 # Compiler Basics
 CC = gcc
-CFLAGS = -fanalyser
+CFLAGS = -fanalyzer
 CWARN = -Wall -Werror -Wextra
 
 # Source & objects
@@ -22,7 +22,7 @@ else
     BUILDDIR = $(OUTDIR)
 endif
 
-BIN := $(BUILDDIR)/$(BIN)i
+BIN := $(BUILDDIR)/$(BIN)
 CC := $(CC) $(CFLAGS)
 
 .PHONY: all
