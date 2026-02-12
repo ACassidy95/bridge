@@ -12,22 +12,23 @@
 // Structure implementations with default initialisations where necessary
 struct card {
         uint8_t         rank;
-        const char*     suit;
-        const char*     str;
+        char            suit;
 };
 
-static struct card card_default = { 0, NULL, NULL };
+static struct card card_default = { 0, '0' };
 
 typedef struct card card_t;
+
+// Decks and Hands are structurally the same but are held different
+// since they are initialised and populated completely differently
 
 struct deck {
         card_t*         cards;
         size_t          capacity;
         size_t          size;
-        const char*     str;
 };
 
-static struct deck deck_default = { NULL, B_STD_DECK_SIZE, 0, NULL };
+static struct deck deck_default = { NULL, B_STD_DECK_SIZE, 0 };
 
 typedef struct deck deck_t;
 
@@ -35,17 +36,15 @@ struct hand {
         card_t*         cards;
         size_t          capacity;
         size_t          size;
-        const char*     str;
 };
 
-static struct hand hand_default = { NULL, B_STD_HAND_SIZE, 0, NULL };
+static struct hand hand_default = { NULL, B_STD_HAND_SIZE, 0 };
 
 typedef struct hand hand_t;
 
 // Function signatures
 // Card functions
-card_t*         init_card(uint8_t, const char*);
-void            free_card(card_t*);
+card_t          init_card(uint8_t, char);
 const char*     card_info(card_t);
 
 // Deck functions
