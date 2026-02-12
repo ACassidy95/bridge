@@ -2,20 +2,32 @@
 #include <stdlib.h>
 #include "defs.h"
 #include "cards.h"
+#include "game.h"
 
 int main() {
+        game_t*         game;
         deck_t*         deck;
-        const char*     di;
+        player_t*       players[4];
 
-        printf("Hello Bridge Player!\n");
+        printf("Hello Bridge Players!\n");
         
         deck = init_deck();
-        di = deck_info(deck);
-        printf("%s\n", di);
+        shuffle_deck(deck);
+        for(size_t i = 0; i < B_STD_NUM_PLAYERS; ++i) {
+                player_t* p;
 
+                p = init_player("Example");
+                players[i] = p;
+        }
+
+        game = init_game(players, deck);
+        
         free_deck(deck);
+        for(size_t i = 0; i < B_STD_NUM_PLAYERS; ++i) {
+                free(players[i]);
+                players[i] = NULL;
+        }
         deck = NULL;
-        di = NULL;        
 
         return 0;
 }
