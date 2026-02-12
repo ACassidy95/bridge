@@ -1,11 +1,14 @@
 CC=gcc
 CFLAGS=-Wall -Wextra
 
-bridge: main.o
-	$(CC) -fanalyzer -o $@ main.o
+bridge: main.o cards.o
+	$(CC) -fanalyzer -o $@ main.o cards.o
 
-main.o: main.c
+cards.o: defs.h cards.h cards.c
+	$(CC) -c cards.c
+
+main.o: main.c cards.o
 	$(CC) -c main.c
 
 clean:
-	rm bridge main.o
+	rm bridge main.o cards.o
