@@ -191,3 +191,10 @@ const char* hand_info(hand_t* hand) {
 
         return buffer;        
 }
+
+void add_card(hand_t* hand, card_t card) {
+        hand->cards[hand->size] = card;
+        hand->size++;
+        
+        return; 
+}
