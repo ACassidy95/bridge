@@ -162,3 +162,32 @@ hand_t init_hand() {
         return h; 
 }
 
+void free_hand(hand_t* hand) {
+        free(hand->cards);
+        hand->cards = NULL;
+
+        free(hand);
+
+        return;
+}
+
+const char* hand_info(hand_t* hand) {
+        char* buffer;
+
+        buffer = (char*)malloc(hand->size * CARD_INFO_BUFFER_SIZE);
+        if (buffer == NULL) {
+                return NULL;
+        }
+
+        for (size_t i = 0; i < B_STD_HAND_SIZE; ++i) {
+                const char* ci = card_info(hand->cards[i]);
+                if (ci == NULL) {
+                        return NULL;
+                }
+
+                strncat(buffer, ci, CARD_INFO_BUFFER_SIZE);
+                free((char*)ci);
+        }
+
+        return buffer;        
+}
