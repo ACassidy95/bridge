@@ -44,4 +44,67 @@ const char* card_info(card_t card) {
         return buffer;
 }
 
-      
+deck_t* init_deck() {
+        deck_t* d;
+
+        d = (deck_t*)malloc(sizeof(deck_t));
+        if(d == NULL) {
+                return NULL;
+        }
+
+        *d = deck_default;
+
+        d->capacity = B_STD_DECK_SIZE;
+        d->cards = (card_t*)malloc(sizeof(card_t) * d->capacity);
+        if(d->cards == NULL) {
+                return NULL;
+        }
+
+        for(size_t i = B_STD_MIN_CARD_RANK; i <= B_STD_MAX_CARD_RANK; ++i) {
+                for(size_t j = 0; j < sizeof(B_STD_CARD_SUITS) / sizeof(B_STD_CARD_SUITS[0]); ++j) {
+                        card_t c = init_card(i, B_STD_CARD_SUITS[j][0]);
+                        d->cards[i * (B_STD_MAX_CARD_RANK - B_STD_MIN_CARD_RANK) + j] = c;
+                        d->size++;
+                }
+        }
+
+        return d;
+}
+
+void free_deck(deck_t* deck) {
+        free(deck->cards);
+        deck->cards = NULL;
+
+        free(deck);
+        return;
+}
+
+const char* deck_info(deck_t* deck) {
+        char* buffer;
+
+        buffer = (char*)malloc(deck->size * CARD_INFO_BUFFER_SIZE);
+
+        for(size_t i = 0; i <= deck->size; ++i) {
+                const char* ci = card_info(deck->cards[i]);
+                strncat(buffer, ci, CARD_INFO_BUFFER_SIZE);
+                free((char*)ci);
+        }
+
+        return buffer;
+}
+
+void shuffle_deck(deck_t* deck) {
+        return;
+}
+
+card_t deal_card(deck_t* deck) {
+        card_t card;
+
+        card = card_default;
+        if (deck->size > 0) {
+                card = deck->cards[deck->size];
+                deck->size--;
+        }
+
+        return card;
+}
