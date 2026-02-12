@@ -87,9 +87,16 @@ const char* deck_info(deck_t* deck) {
         char* buffer;
 
         buffer = (char*)malloc(deck->size * CARD_INFO_BUFFER_SIZE);
+        if(buffer == NULL) {
+                return NULL;
+        }
 
         for(size_t i = 0; i < deck->size; ++i) {
                 const char* ci = card_info(deck->cards[i]);
+                if (ci == NULL) {
+                        return NULL;
+                }
+
                 strncat(buffer, ci, CARD_INFO_BUFFER_SIZE);
                 free((char*)ci);
         }
