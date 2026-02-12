@@ -16,13 +16,14 @@ BUILDDIR =
 
 DEBUG?=0
 ifeq ($(DEBUG), 1)
-    CFLAGS := -g $(CFLAGS)
+    CFLAGS :=  $(CFLAGS) -g
     BUILDDIR = $(DBGDIR)
 else
     BUILDDIR = $(OUTDIR)
 endif
 
-BIN := $(BUILDDIR)/$(BIN)
+BIN := $(BUILDDIR)/$(BIN)i
+CC := $(CC) $(CFLAGS)
 
 .PHONY: all
 
