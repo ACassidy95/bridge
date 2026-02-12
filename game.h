@@ -9,7 +9,7 @@
 
 struct player{
         const char*     name;
-        card_t*         hand;      
+        hand_t*         hand;      
 };
 
 static struct player player_default = { NULL, NULL };

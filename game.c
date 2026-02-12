@@ -1,11 +1,13 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "cards.h"
 #include "game.h"
 
-player_t init_player(const char* name) {
+player_t* init_player(const char* name) {
         player_t*       p;
         char*           pname;
-        card_t*         phand;
+        hand_t*         phand;
 
         p = (player_t*)malloc(sizeof(player_t));
         if(p == NULL) {
@@ -19,7 +21,7 @@ player_t init_player(const char* name) {
                 return NULL;
         }
 
-        phand = (card_t*)malloc(sizeof(card_t) * B_STD_HAND_SIZE);
+        phand = (hand_t*)malloc(sizeof(hand_t) * B_STD_HAND_SIZE);
         if(phand == NULL) {
                 return NULL;
         }
@@ -42,7 +44,7 @@ void free_player(player_t* player) {
 
         free(player);
 
-        return
+        return;
 }
 
 const char* player_info(player_t* player) {
@@ -57,12 +59,12 @@ const char* player_info(player_t* player) {
         // +11 for additional hardcoded string sections
         buff_len = strlen(name) + strlen(hinfo) + 1 + 11;
 
-        buffer = (char*)malloc(bufflen);
+        buffer = (char*)malloc(buff_len);
         if (buffer == NULL) {
                 return NULL;
         }
 
-        snprintf(buffer, buff_len, "Player: %s | %s", name, hinfo)
+        snprintf(buffer, buff_len, "Player: %s | %s", name, hinfo);
 
         return buffer;
 }
@@ -77,7 +79,7 @@ game_t* init_game(player_t* players[B_STD_NUM_PLAYERS], deck_t* deck) {
         if (g == NULL) {
                 return NULL;
         } 
-        g = *game_default;
+        *g = game_default;
         
         for(size_t i = 0; i < B_STD_NUM_PLAYERS; ++i) {
                 g->players[i] = players[i];
