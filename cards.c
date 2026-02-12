@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "cards.h"
 
 card_t init_card(uint8_t rank, char suit) {
@@ -105,6 +106,20 @@ const char* deck_info(deck_t* deck) {
 }
 
 void shuffle_deck(deck_t* deck) {
+        int c1, c2;
+        card_t tmp;
+        
+        srand(time(NULL));
+
+        for (size_t i = 0; i < deck->size; ++i) {
+                c1 = rand() % deck->size;
+                c2 = rand() % deck->size;
+
+                tmp = deck->cards[c1];
+                deck->cards[c1] = deck->cards[c2];
+                deck->cards[c2] = tmp;
+        }
+
         return;
 }
 
