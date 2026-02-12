@@ -141,16 +141,16 @@ card_t deal_card(deck_t* deck) {
 
 // Hand function imeplementation
 
-hand_t init_hand() {
+hand_t* init_hand() {
         hand_t*         h;
-        cards_t*        c;
+        card_t*         c;
         
         h = (hand_t*)malloc(sizeof(hand_t));
         if (h == NULL) {
                 return NULL;
         }
 
-        c = (card_t*)malloc(sizoef(card_t) * B_STD_HAND_SIZE);
+        c = (card_t*)malloc(sizeof(card_t) * B_STD_HAND_SIZE);
         if (c == NULL) {
                 return NULL;
         }
