@@ -13,7 +13,7 @@ static const char* B_STD_CARD_SUITS[4] = {
         "DIAMONDS",
         "HEARTS",
         "SPADES"
-}
+};
 
 static const char* B_STD_BID_SUITS[5] = {
         "CLUBS",
@@ -21,7 +21,7 @@ static const char* B_STD_BID_SUITS[5] = {
         "HEARTS",
         "SPADES",
         "NO TRUMP"
-}
+};
 
 // Declare basic structures required for a bridge game
 struct  card;
