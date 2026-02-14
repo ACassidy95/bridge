@@ -4,6 +4,10 @@
 #include "cards.h"
 #include "game.h"
 
+// Game-specific helper function delcarations
+void    deal_cards(cards_t*, player_t*[B_STD_NUM_PLAYERS]);
+
+// Player functions
 player_t* init_player(const char* name) {
         player_t*       p;
         char*           pname;
@@ -54,15 +58,15 @@ const char* player_info(player_t* player) {
         name = player->name;
         hinfo = card_collection_info(player->hand);
 
-        // +3 for additional hardcoded string separator and +1 for null terminator
-        buff_len = strlen(name) + strlen(hinfo) + 3 + 1;
+        // +4 for additional hardcoded string separator and +1 for null terminator
+        buff_len = strlen(name) + strlen(hinfo) + 4 + 1;
 
         buffer = (char*)malloc(buff_len);
         if (buffer == NULL) {
-                return NULL;
+                return "\0";
         }
 
-        snprintf(buffer, buff_len, "%s | %s", name, hinfo);
+        snprintf(buffer, buff_len, "%s | %s\n", name, hinfo);
 
         return buffer;
 }
@@ -106,10 +110,10 @@ const char* game_info(game_t* game) {
         buff_len = 0;
         for (size_t i = 0; i < B_STD_NUM_PLAYERS; ++i) {
                 const char* pi = player_info(game->players[i]);
-                if (pi == NULL) {
-                        return NULL;
+                if (strncmp(pi, "\0", 1) == 0) {
+                        return "\0";
                 }
-                
+ 
                 buff_len += strlen(pi);
                 free((char*)pi);
                 pi=NULL;
@@ -118,21 +122,46 @@ const char* game_info(game_t* game) {
 
         buffer = (char*)malloc(buff_len);
         if (buffer == NULL) {
-                return NULL;
+                return "\0";
         }
 
         for (size_t i = 0; i < B_STD_NUM_PLAYERS; ++i) {
                 const char* pi = player_info(game->players[i]);
-                if (pi == NULL) {
-                        return NULL;
+                if (strncmp(pi, "\0", 1) == 0) {
+                        free(buffer);
+                        return "\0";
                 }
-                
-                strncat(buffer, pi, strlen(pi));
+ 
+                strncat(buffer, pi, strlen(pi)); 
                 free((char*)pi);
                 pi=NULL;
         }
         buffer[buff_len] = '\0';
 
         return buffer;
+}
+
+void play(game_t* game) {
+        shuffle(game->deck);
+        deal_cards(game->deck, game->players);
+
+        const char* ci = game_info(game);
+        printf("%s\n", ci);
+
+        return;
+}
+
+void deal_cards(cards_t* deck, player_t* players[B_STD_NUM_PLAYERS]) {
+        enum remove_order order = LAST;
+
+        if (deck->size != B_STD_DECK_SIZE) {
+                printf("I can't deal, cards are missing!\n");
+                return;
+        }
+
+        for (size_t i = 0; i < B_STD_DECK_SIZE; ++i) {
+                card_t c = remove_card(deck, order);
+                add_card(players[i % B_STD_NUM_PLAYERS]->hand, c);
+        }
 }
 

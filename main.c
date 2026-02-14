@@ -14,7 +14,6 @@ int main() {
         
         deck = init_card_collection(B_STD_DECK_SIZE);
         create_deck(deck);
-        shuffle(deck);
         for (size_t i = 0; i < B_STD_NUM_PLAYERS; ++i) {
                 player_t* p;
 
@@ -22,11 +21,11 @@ int main() {
                 players[i] = p;
         }
 
-        printf("Let's Begin!\n");
         game = init_game(players, deck);
-        gi = game_info(game); 
-        printf("%s\n", gi);
-       
+        
+        printf("Let's Begin!\n");
+        play(game);
+
         free_game(game);
         game = NULL;
 

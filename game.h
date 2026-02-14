@@ -34,5 +34,6 @@ const char*     player_info(player_t*);
 game_t*         init_game(player_t*[B_STD_NUM_PLAYERS], cards_t*);
 void            free_game(game_t*);
 const char*     game_info(game_t*);
+void            play(game_t*);
 
 #endif
