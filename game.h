@@ -9,7 +9,7 @@
 
 struct player{
         const char*     name;
-        hand_t*         hand;      
+        cards_t*        hand;      
 };
 
 static struct player player_default = { NULL, NULL };
@@ -18,7 +18,7 @@ typedef struct player player_t;
 
 struct game{
         player_t*       players[B_STD_NUM_PLAYERS];
-        deck_t*         deck;      
+        cards_t*        deck;      
 };
 
 static struct game game_default = { NULL, NULL };
@@ -31,7 +31,7 @@ void            free_player(player_t*);
 const char*     player_info(player_t*);
 
 // Game function declarations
-game_t*         init_game(player_t*[B_STD_NUM_PLAYERS], deck_t*);
+game_t*         init_game(player_t*[B_STD_NUM_PLAYERS], cards_t*);
 void            free_game(game_t*);
 const char*     game_info(game_t*);
 

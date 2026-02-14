@@ -7,7 +7,7 @@
 player_t* init_player(const char* name) {
         player_t*       p;
         char*           pname;
-        hand_t*         phand;
+        cards_t*        phand;
 
         p = (player_t*)malloc(sizeof(player_t));
         if(p == NULL) {
@@ -20,15 +20,13 @@ player_t* init_player(const char* name) {
         if(pname == NULL) {
                 return NULL;
         }
-
-        phand = (hand_t*)malloc(sizeof(hand_t) * B_STD_HAND_SIZE);
+        strncpy(pname, name, PLAYER_NAME_MAX_SIZE);
+        
+        phand = init_card_collection(B_STD_HAND_SIZE);
         if(phand == NULL) {
                 return NULL;
         }
 
-        strncpy(pname, name, PLAYER_NAME_MAX_SIZE);
-        phand = init_hand();
-        
         p->name = pname;
         p->hand = phand;
 
@@ -36,7 +34,7 @@ player_t* init_player(const char* name) {
 }
 
 void free_player(player_t* player) {
-        free_hand(player->hand);
+        free_card_collection(player->hand);
         player->hand = NULL;
 
         free((char*)player->name);
@@ -54,25 +52,23 @@ const char* player_info(player_t* player) {
         size_t          buff_len;
 
         name = player->name;
-        hinfo = hand_info(player->hand);
+        hinfo = card_collection_info(player->hand);
 
-        // +11 for additional hardcoded string sections
-        buff_len = strlen(name) + strlen(hinfo) + 1 + 11;
+        // +3 for additional hardcoded string separator and +1 for null terminator
+        buff_len = strlen(name) + strlen(hinfo) + 3 + 1;
 
         buffer = (char*)malloc(buff_len);
         if (buffer == NULL) {
                 return NULL;
         }
 
-        snprintf(buffer, buff_len, "Player: %s | %s", name, hinfo);
+        snprintf(buffer, buff_len, "%s | %s", name, hinfo);
 
         return buffer;
 }
 
 // Game function implementations
-
-
-game_t* init_game(player_t* players[B_STD_NUM_PLAYERS], deck_t* deck) {
+game_t* init_game(player_t* players[B_STD_NUM_PLAYERS], cards_t* deck) {
         game_t* g;
 
         g = (game_t*)malloc(sizeof(game_t));
@@ -95,7 +91,7 @@ void free_game(game_t* game) {
                 game->players[i] = NULL;
         }
         
-        free_deck(game->deck);
+        free_card_collection(game->deck);
         game->deck = NULL;
 
         free(game);
@@ -116,6 +112,7 @@ const char* game_info(game_t* game) {
                 
                 buff_len += strlen(pi);
                 free((char*)pi);
+                pi=NULL;
         }
         buff_len += 1;
 
@@ -132,6 +129,7 @@ const char* game_info(game_t* game) {
                 
                 strncat(buffer, pi, strlen(pi));
                 free((char*)pi);
+                pi=NULL;
         }
         buffer[buff_len] = '\0';
 
