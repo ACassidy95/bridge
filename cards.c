@@ -77,9 +77,11 @@ void free_card_collection(cards_t* cards) {
 }
 
 const char* card_collection_info(cards_t* cards) {
-        char* buffer;
+        char*   buffer;
+        size_t  buff_len;
 
-        buffer = (char*)malloc(cards->size * CARD_INFO_BUFFER_SIZE);
+        buff_len = cards->size * CARD_INFO_BUFFER_SIZE + 1; 
+        buffer = (char*)malloc(buff_len);
         if(buffer == NULL) {
                 return NULL;
         }
@@ -93,6 +95,7 @@ const char* card_collection_info(cards_t* cards) {
                 strncat(buffer, ci, CARD_INFO_BUFFER_SIZE);
                 free((char*)ci);
         }
+        buffer[buff_len - 1] = '\0';
 
         return buffer;
 }
