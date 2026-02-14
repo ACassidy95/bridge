@@ -49,55 +49,43 @@ const char* card_info(card_t card) {
         return buffer;
 }
 
-// Deck function implmentations
+// Card collection function implementations
+cards_t* init_card_collection(size_t capacity) {
+        cards_t* c;
 
-deck_t* init_deck() {
-        deck_t* d;
-
-        d = (deck_t*)malloc(sizeof(deck_t));
-        if(d == NULL) {
+        c = (cards_t*)malloc(sizeof(cards_t));
+        if (c == NULL) {
+                return NULL;
+        }        
+        c->capacity = capacity;
+        c->size = 0;
+        
+        c->cards = (card_t*)malloc(sizeof(card_t) * capacity);
+        if (c->cards == NULL) {
                 return NULL;
         }
 
-        *d = deck_default;
-
-        d->capacity = B_STD_DECK_SIZE;
-        d->cards = (card_t*)malloc(sizeof(card_t) * d->capacity);
-        if(d->cards == NULL) {
-                return NULL;
-        }
-
-        for(size_t i = 0; i <= B_STD_MAX_CARD_RANK - B_STD_MIN_CARD_RANK; ++i) {
-                for(size_t j = 0; j < sizeof(B_STD_CARD_SUITS) / sizeof(B_STD_CARD_SUITS[0]); ++j) {
-                        card_t c = init_card(i + B_STD_MIN_CARD_RANK, B_STD_CARD_SUITS[j][0]);
-                        size_t idx = i * (sizeof(B_STD_CARD_SUITS) / sizeof(B_STD_CARD_SUITS[0])) + j;
-                        
-                        d->cards[idx] = c;
-                        d->size++;
-                }
-        }
-
-        return d;
+        return c;
 }
 
-void free_deck(deck_t* deck) {
-        free(deck->cards);
-        deck->cards = NULL;
+void free_card_collection(cards_t* cards) {
+        free(cards->cards);
+        cards->cards = NULL;
 
-        free(deck);
+        free(cards);
         return;
 }
 
-const char* deck_info(deck_t* deck) {
+const char* card_collection_info(cards_t* cards) {
         char* buffer;
 
-        buffer = (char*)malloc(deck->size * CARD_INFO_BUFFER_SIZE);
+        buffer = (char*)malloc(cards->size * CARD_INFO_BUFFER_SIZE);
         if(buffer == NULL) {
                 return NULL;
         }
 
-        for(size_t i = 0; i < deck->size; ++i) {
-                const char* ci = card_info(deck->cards[i]);
+        for(size_t i = 0; i < cards->size; ++i) {
+                const char* ci = card_info(cards->cards[i]);
                 if (ci == NULL) {
                         return NULL;
                 }
@@ -109,90 +97,56 @@ const char* deck_info(deck_t* deck) {
         return buffer;
 }
 
-void shuffle_deck(deck_t* deck) {
+void create_deck(cards_t* cards) {
+        if (cards->capacity < B_STD_DECK_SIZE) {
+                printf("Not enough space to create a deck. Have %zu, need %d", cards->capacity, B_STD_DECK_SIZE);
+                return;
+        }
+
+        for(size_t i = 0; i <= B_STD_MAX_CARD_RANK - B_STD_MIN_CARD_RANK; ++i) {
+                for(size_t j = 0; j < sizeof(B_STD_CARD_SUITS) / sizeof(B_STD_CARD_SUITS[0]); ++j) {
+                        card_t c = init_card(i + B_STD_MIN_CARD_RANK, B_STD_CARD_SUITS[j][0]);
+                        size_t idx = i * (sizeof(B_STD_CARD_SUITS) / sizeof(B_STD_CARD_SUITS[0])) + j;
+                        
+                        cards->cards[idx] = c;
+                        cards->size++;
+                }
+        }
+
+        return;
+}
+
+void shuffle(cards_t* cards) {
         int c1, c2;
         card_t tmp;
         
         srand(time(NULL));
 
-        for (size_t i = 0; i < deck->size; ++i) {
-                c1 = rand() % deck->size;
-                c2 = rand() % deck->size;
+        for (size_t i = 0; i < cards->size; ++i) {
+                c1 = rand() % cards->size;
+                c2 = rand() % cards->size;
 
-                tmp = deck->cards[c1];
-                deck->cards[c1] = deck->cards[c2];
-                deck->cards[c2] = tmp;
+                tmp = cards->cards[c1];
+                cards->cards[c1] = cards->cards[c2];
+                cards->cards[c2] = tmp;
         }
 
         return;
 }
 
-card_t deal_card(deck_t* deck) {
+card_t deal(cards_t* cards) {
         card_t card;
 
         card = card_default;
-        if (deck->size > 0) {
-                card = deck->cards[deck->size];
-                deck->size--;
+        if (cards->size > 0) {
+                card = cards->cards[cards->size];
+                cards->size--;
         }
 
         return card;
 }
 
-// Hand function imeplementation
-
-hand_t* init_hand() {
-        hand_t*         h;
-        card_t*         c;
-        
-        h = (hand_t*)malloc(sizeof(hand_t));
-        if (h == NULL) {
-                return NULL;
-        }
-
-        c = (card_t*)malloc(sizeof(card_t) * B_STD_HAND_SIZE);
-        if (c == NULL) {
-                return NULL;
-        }
-
-        h->cards = c;
-        h->capacity = B_STD_HAND_SIZE;
-        h->size = 0;
-
-        return h; 
-}
-
-void free_hand(hand_t* hand) {
-        free(hand->cards);
-        hand->cards = NULL;
-
-        free(hand);
-
-        return;
-}
-
-const char* hand_info(hand_t* hand) {
-        char* buffer;
-
-        buffer = (char*)malloc(hand->size * CARD_INFO_BUFFER_SIZE);
-        if (buffer == NULL) {
-                return NULL;
-        }
-
-        for (size_t i = 0; i < B_STD_HAND_SIZE; ++i) {
-                const char* ci = card_info(hand->cards[i]);
-                if (ci == NULL) {
-                        return NULL;
-                }
-
-                strncat(buffer, ci, CARD_INFO_BUFFER_SIZE);
-                free((char*)ci);
-        }
-
-        return buffer;        
-}
-
-void add_card(hand_t* hand, card_t card) {
+void add_card(cards_t* hand, card_t card) {
         hand->cards[hand->size] = card;
         hand->size++;
         

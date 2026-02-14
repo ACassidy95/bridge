@@ -27,8 +27,7 @@ static const char* B_STD_BID_SUITS[5] = {
 
 // Declare basic structures
 struct  card;
-struct  deck;
-struct  hand;
+struct  cards;
 struct  player;
 struct  game;
 
