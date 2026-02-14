@@ -149,9 +149,28 @@ card_t deal(cards_t* cards) {
         return card;
 }
 
-void add_card(cards_t* hand, card_t card) {
-        hand->cards[hand->size] = card;
-        hand->size++;
+void add_card(cards_t* cards, card_t card) {
+        cards->cards[cards->size] = card;
+        cards->size++;
         
         return; 
 }
+
+card_t remove_card(cards_t* cards, enum remove_order order) {
+        card_t card;
+        size_t idx;
+ 
+        idx = 0;
+        if (order == FIRST) {
+                idx = 0;
+        } else if (order == LAST) {
+                idx = cards->size - 1;
+        }
+
+        card = cards->cards[idx];
+        cards->cards[idx] = card_default;
+        cards->size--;
+
+        return card;
+}
+

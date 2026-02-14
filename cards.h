@@ -29,6 +29,11 @@ static struct cards cards_default = { NULL, 0, 0 };
 
 typedef struct cards cards_t;
 
+enum remove_order {
+        FIRST,
+        LAST
+};
+
 // Function signatures
 // Card functions
 card_t          init_card(uint8_t, char);
@@ -40,8 +45,8 @@ cards_t*        init_card_collection(size_t);
 void            free_card_collection(cards_t*);
 const char*     card_collection_info(cards_t*);
 void            create_deck(cards_t*);
-void            add(cards_t*, card_t);
-card_t          deal(cards_t*);
+void            add_card(cards_t*, card_t);
+card_t          remove_card(cards_t*, enum remove_order);
 void            shuffle(cards_t*);
 
 #endif
