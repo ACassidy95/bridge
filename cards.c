@@ -145,10 +145,11 @@ void create_deck(cards_t* cards) {
                 return;
         }
 
+        suit_t ns = NUM_SUITS;
         for(size_t i = 0; i <= B_STD_MAX_CARD_RANK - B_STD_MIN_CARD_RANK; ++i) {
-                for(size_t j = 0; j < sizeof(B_STD_CARD_SUITS) / sizeof(B_STD_CARD_SUITS[0]); ++j) {
+                for(size_t j = 0; j < ns; ++j) {
                         card_t c = init_card(i + B_STD_MIN_CARD_RANK, (suit_t)j);
-                        size_t idx = i * (sizeof(B_STD_CARD_SUITS) / sizeof(B_STD_CARD_SUITS[0])) + j;
+                        size_t idx = i * ns  + j;
                         
                         cards->cards[idx] = c;
                         cards->size++;

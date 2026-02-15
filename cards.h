@@ -13,7 +13,8 @@ enum suit {
         CLUBS,
         DIAMONDS,
         HEARTS,
-        SPADES
+        SPADES,
+        NUM_SUITS
 };
 
 typedef enum suit suit_t;
