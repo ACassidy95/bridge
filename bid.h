@@ -3,7 +3,7 @@
 
 #include <stdbool.h>
 
-// Bid info will be formatted in x chars as |%d%c|\0
+// Bid info will be formatted in 5 chars as |%d%c|\0
 #define BID_INFO_BUFFER_SIZE 5
 
 // Define basic bid types
@@ -34,7 +34,8 @@ typedef struct player_bid player_bid_t;
 
 struct bid_table {
         bid_t*  table;
-        bid_t   current_bid;
+        size_t  table_size;
+        size_t  current_bid;
 };
 
 typedef struct bid_table bid_table_t;

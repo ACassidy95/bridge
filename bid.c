@@ -21,7 +21,7 @@ const char* bid_info(bid_t bid) {
 
         snprintf(buffer, BID_INFO_BUFFER_SIZE, "|%d%c|\0", b.rank, suit_info(b.suit));
 
-        return "\0";
+        return buffer;
 }
 
 player_bid_t init_player_bid(uint8_t rank, bid_suit_t suit, bool pass) {
@@ -41,10 +41,11 @@ const char* player_bid_info(player_bid_t bid) {
 
 bid_table init_bid_table() {
         bid_table_t     bt;
-        size_t          table_size;
+        size_t          bt_size;
 
-        table_size = sizeof(bid_t) * (suit_t)NUM_SUITS * B_STD_MAX_BID_RANK;
-        bt.table = (bid_t*)malloc(table_size);
+        bt_size = sizeof(bid_t) * (suit_t)NUM_SUITS * B_STD_MAX_BID_RANK;
+        bt.table = (bid_t*)malloc(bt_size);
+        bt.table_size = 0
 
         for (size_t i = 0; i < B_STD_MAX_BID; ++i) {
                 for (size_t j = 0; j < (suit_t)NUM_SUITS; ++j) {
@@ -52,6 +53,7 @@ bid_table init_bid_table() {
                         size_t  idx = (i + 1) * (suit_t)NUM_SUITS + (suit_t)j;
 
                         bt.table[idx] = bid;
+                        bt.table_size++;
                 }
         }
 
@@ -66,5 +68,25 @@ void free_bid_table(bid_table_t* bid_table) {
 }
 
 const char* bid_table_info(bid_table_t* bid_table) {
-        return "\0";
+        char*   buffer;
+        size_t  buff_len;
+
+        buff_len = bit_table->table_size * BID_INFO_BUFFER_SIZE + 1;
+        buffer = (char*)malloc(buff_len);
+        if (buffer == NULL) {
+                return NULL;
+        }
+
+        for (size_t i = 0; i < bid_table->table_size; ++i) {
+                const char* bi = bid_info(bid_table->table[i]);
+                if (bi == NULL) {
+                        return NULL;
+                }
+
+                strncat(buffer, bi, BID_INFO_BUFFER_SIZE);
+                free((char*)bi);
+        }
+        buffer[buff_len - 1] = '\0';
+
+        return buffer;
 }
