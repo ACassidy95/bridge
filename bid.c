@@ -1,4 +1,6 @@
+#include <stdlib.h>
 #include "bid.h"
+#include "cards.h"
 
 bid_t init_bid(uint8_t rank, bid_suit_t suit) {
         bid_t b;
@@ -10,6 +12,15 @@ bid_t init_bid(uint8_t rank, bid_suit_t suit) {
 }
 
 const char* bid_info(bid_t bid) {
+        char*           buffer;
+
+        buffer = (char*)malloc(BID_INFO_BUFFER_SIZE);
+        if (buffer == NULL) {
+                return NULL;
+        }
+
+        snprintf(buffer, BID_INFO_BUFFER_SIZE, "|%d%c|\0", b.rank, suit_info(b.suit));
+
         return "\0";
 }
 

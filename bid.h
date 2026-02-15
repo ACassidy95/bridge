@@ -3,6 +3,9 @@
 
 #include <stdbool.h>
 
+// Bid info will be formatted in x chars as |%d%c|\0
+#define BID_INFO_BUFFER_SIZE 5
+
 // Define basic bid types
 enum bid_suit {
         CLUBS,
