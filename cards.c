@@ -6,7 +6,7 @@
 
 // Card function implementations
 
-card_t init_card(uint8_t rank, char suit) {
+card_t init_card(uint8_t rank, suit_t suit) {
         card_t c;
 
         c = card_default;
@@ -27,19 +27,19 @@ const char* card_info(card_t card) {
 
         switch(card.rank) {
         case B_STD_MIN_CARD_RANK ... 10:
-                sprintf(buffer, "|%2d\\%2c|", card.rank, card.suit);
+                sprintf(buffer, "|%2d\\%2c|", card.rank, suit_info(card.suit));
                 break;
         case 11:
-                sprintf(buffer, "|%2c\\%2c|", 'J', card.suit);
+                sprintf(buffer, "|%2c\\%2c|", 'J', suit_info(card.suit));
                 break;
         case 12:
-                sprintf(buffer, "|%2c\\%2c|", 'Q', card.suit);
+                sprintf(buffer, "|%2c\\%2c|", 'Q', suit_info(card.suit));
                 break;
         case 13:
-                sprintf(buffer, "|%2c\\%2c|", 'K', card.suit);
+                sprintf(buffer, "|%2c\\%2c|", 'K', suit_info(card.suit));
                 break;
         case B_STD_MAX_CARD_RANK:
-                sprintf(buffer, "|%2c\\%2c|", 'A', card.suit);
+                sprintf(buffer, "|%2c\\%2c|", 'A', suit_info(card.suit));
                 break;
         default:
                 sprintf(buffer, "|ERROR|");
@@ -47,6 +47,45 @@ const char* card_info(card_t card) {
         }
 
         return buffer;
+}
+
+const char suit_info(suit_t suit) {
+        switch(suit) {
+        case CLUBS:     return 'C';
+        case DIAMONDS:  return 'D';
+        case HEARTS:    return 'H';
+        case SPADES:    return 'S';
+        default:        return '\\';
+        }
+}
+
+// Cards are compared on rank and suit
+// c1.suit > c2.suit                      => c1 > c2
+// c1.suit = c2.suit && c1.rank > c2.rank => c1 > c2
+//                   && c1.rank < c2.rank => c1 < c2
+// c1.suit < c2.suit                      => c2 > c1    
+static int cmp_cards(const void* c1, const void* c2) {
+        int cmp;
+
+        card_t cd1 = *(card_t*)c1;
+        card_t cd2 = *(card_t*)c2;
+
+        if (cd1.suit > cd2.suit) {
+                cmp = 1;
+        } else if (cd1.suit == cd2.suit) { 
+                if (cd1.rank > cd2.rank) {
+                        cmp = 1;
+                } else if (cd1.rank < cd2.rank) {
+                        cmp = -1;
+                } else {
+                        // This shouldn't ever occur but needed to shut the static analyser up
+                        cmp = 0;
+                }
+        } else {
+                cmp = -1;
+        }
+
+        return cmp; 
 }
 
 // Card collection function implementations
@@ -108,7 +147,7 @@ void create_deck(cards_t* cards) {
 
         for(size_t i = 0; i <= B_STD_MAX_CARD_RANK - B_STD_MIN_CARD_RANK; ++i) {
                 for(size_t j = 0; j < sizeof(B_STD_CARD_SUITS) / sizeof(B_STD_CARD_SUITS[0]); ++j) {
-                        card_t c = init_card(i + B_STD_MIN_CARD_RANK, B_STD_CARD_SUITS[j][0]);
+                        card_t c = init_card(i + B_STD_MIN_CARD_RANK, (suit_t)j);
                         size_t idx = i * (sizeof(B_STD_CARD_SUITS) / sizeof(B_STD_CARD_SUITS[0])) + j;
                         
                         cards->cards[idx] = c;
@@ -135,6 +174,10 @@ void shuffle(cards_t* cards) {
         }
 
         return;
+}
+
+void sort(cards_t* cards) {
+        qsort(cards->cards, cards->size, sizeof(card_t), cmp_cards);
 }
 
 card_t deal(cards_t* cards) {
@@ -173,4 +216,3 @@ card_t remove_card(cards_t* cards, enum remove_order order) {
 
         return card;
 }
-

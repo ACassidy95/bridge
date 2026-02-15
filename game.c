@@ -145,6 +145,10 @@ void play(game_t* game) {
         shuffle(game->deck);
         deal_cards(game->deck, game->players);
 
+        for (size_t i = 0; i < B_STD_NUM_PLAYERS; ++i) {
+                sort(game->players[i]->hand);
+        }
+
         const char* ci = game_info(game);
         printf("%s\n", ci);
 

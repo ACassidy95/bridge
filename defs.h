@@ -26,6 +26,7 @@ static const char* B_STD_BID_SUITS[5] = {
 };
 
 // Declare basic structures
+enum    suit;
 struct  card;
 struct  cards;
 struct  player;
