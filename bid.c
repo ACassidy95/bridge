@@ -29,10 +29,31 @@ const char* player_bid_info(player_bid_t bid) {
 }
 
 bid_table init_bid_table() {
-        bid_table_t bt;
+        bid_table_t     bt;
+        size_t          table_size;
+
+        table_size = sizeof(bid_t) * (suit_t)NUM_SUITS * B_STD_MAX_BID_RANK;
+        bt.table = (bid_t*)malloc(table_size);
+
+        for (size_t i = 0; i < B_STD_MAX_BID; ++i) {
+                for (size_t j = 0; j < (suit_t)NUM_SUITS; ++j) {
+                        bid_t   bid = init_bid(i, (suit_t)j);
+                        size_t  idx = (i + 1) * (suit_t)NUM_SUITS + (suit_t)j;
+
+                        bt.table[idx] = bid;
+                }
+        }
+
         return bt;
 }
 
-const char* bid_table_info(bid_table_t bid_table) {
+void free_bid_table(bid_table_t* bid_table) {
+        free(bid_table->table);
+        bid_table->table = NULL;
+
+        return;
+}
+
+const char* bid_table_info(bid_table_t* bid_table) {
         return "\0";
 }

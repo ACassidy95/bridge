@@ -30,7 +30,7 @@ struct player_bid {
 typedef struct player_bid player_bid_t;
 
 struct bid_table {
-        bid_t*  bids;
+        bid_t*  table;
         bid_t   current_bid;
 };
 
@@ -44,7 +44,8 @@ player_bid_t    init_player_bid(uint8_t, bid_suit_t, bool);
 const char*     player_bid_info(player_bid_t);
 
 bid_table_t     init_bid_table();
-const char*     bid_table_info(bid_table_t);
+void            free_bid_table(bid_table_t*)
+const char*     bid_table_info(bid_table_t*);
 
 #endif
 
