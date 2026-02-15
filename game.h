@@ -1,7 +1,7 @@
 #ifndef GAME_H_
 #define GAME_H_
 
-#include "defs.h"
+#include "decls.h"
 
 #define PLAYER_NAME_MAX_SIZE 32
 

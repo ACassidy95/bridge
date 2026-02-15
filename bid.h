@@ -3,7 +3,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#include "defs.h"
+#include "decls.h"
 
 // Bid info will be formatted in 5 chars as |%d%c|\0
 #define BID_INFO_BUFFER_SIZE 5

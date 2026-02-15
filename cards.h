@@ -2,7 +2,7 @@
 #define CARDS_H_
 
 #include <stdint.h>
-#include "defs.h"
+#include "decls.h"
 
 // Card related constants
 

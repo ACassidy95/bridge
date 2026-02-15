@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "defs.h"
+#include "decls.h"
 #include "cards.h"
 #include "game.h"
 
