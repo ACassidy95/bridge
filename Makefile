@@ -4,7 +4,7 @@ CFLAGS = -fanalyzer
 CWARN = -Wall -Werror -Wextra
 
 # Source & objects
-SRCS = cards.c game.c main.c
+SRCS = cards.c bid.c game.c main.c
 OBJS = $(SRCS:.c=.o)
 BIN = bridge
 

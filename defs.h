@@ -7,7 +7,7 @@
 #define B_STD_HAND_SIZE         13
 #define B_STD_MIN_CARD_RANK     2
 #define B_STD_MAX_CARD_RANK     14
-#define B_STD_MAX_BID_RANK      7
+#define B_STD_MAX_BID_OVER      7
 
 // Declare basic structures
 enum    suit;

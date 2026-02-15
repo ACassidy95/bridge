@@ -1,11 +1,12 @@
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "bid.h"
-#include "cards.h"
 
-bid_t init_bid(uint8_t rank, bid_suit_t suit) {
+bid_t init_bid(uint8_t over, bid_suit_t suit) {
         bid_t b;
 
-        b.rank = rank;
+        b.over = over;
         b.suit = suit;
 
         return b;
@@ -19,16 +20,27 @@ const char* bid_info(bid_t bid) {
                 return NULL;
         }
 
-        snprintf(buffer, BID_INFO_BUFFER_SIZE, "|%d%c|\0", b.rank, suit_info(b.suit));
+        snprintf(buffer, BID_INFO_BUFFER_SIZE, "|%d%c|\0", bid.over, bid_suit_info(bid.suit));
 
         return buffer;
 }
 
-player_bid_t init_player_bid(uint8_t rank, bid_suit_t suit, bool pass) {
+const char bid_suit_info(bid_suit_t suit) {
+        switch (suit) {
+        case B_CLUBS:           return 'C';
+        case B_DIAMONDS:        return 'D';
+        case B_HEARTS:          return 'H';
+        case B_SPADES:          return 'S';
+        case B_NO_TRUMP:        return 'N';
+        default:                return '\\';
+        }
+}
+
+player_bid_t init_player_bid(uint8_t over, bid_suit_t suit, bool pass) {
         bid_t           b;
         player_bid_t    p;
 
-        p.bid.rank = rank;
+        p.bid.over = over;
         p.bid.suit = suit;
         p.pass = pass;
 
@@ -39,18 +51,18 @@ const char* player_bid_info(player_bid_t bid) {
         return "\0";
 }
 
-bid_table init_bid_table() {
+bid_table_t init_bid_table() {
         bid_table_t     bt;
         size_t          bt_size;
 
-        bt_size = sizeof(bid_t) * (suit_t)NUM_SUITS * B_STD_MAX_BID_RANK;
+        bt_size = sizeof(bid_t) * (bid_suit_t)NUM_BID_SUITS * B_STD_MAX_BID_OVER;
         bt.table = (bid_t*)malloc(bt_size);
-        bt.table_size = 0
+        bt.table_size = 0;
 
-        for (size_t i = 0; i < B_STD_MAX_BID; ++i) {
-                for (size_t j = 0; j < (suit_t)NUM_SUITS; ++j) {
-                        bid_t   bid = init_bid(i, (suit_t)j);
-                        size_t  idx = (i + 1) * (suit_t)NUM_SUITS + (suit_t)j;
+        for (size_t i = 0; i < B_STD_MAX_BID_OVER; ++i) {
+                for (size_t j = 0; j < (bid_suit_t)NUM_BID_SUITS; ++j) {
+                        bid_t   bid = init_bid(i, (bid_suit_t)j);
+                        size_t  idx = (i + 1) * (bid_suit_t)NUM_BID_SUITS + (bid_suit_t)j;
 
                         bt.table[idx] = bid;
                         bt.table_size++;
@@ -71,7 +83,7 @@ const char* bid_table_info(bid_table_t* bid_table) {
         char*   buffer;
         size_t  buff_len;
 
-        buff_len = bit_table->table_size * BID_INFO_BUFFER_SIZE + 1;
+        buff_len = bid_table->table_size * BID_INFO_BUFFER_SIZE + 1;
         buffer = (char*)malloc(buff_len);
         if (buffer == NULL) {
                 return NULL;
