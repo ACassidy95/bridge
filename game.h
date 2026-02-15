@@ -37,3 +37,4 @@ const char*     game_info(game_t*);
 void            play(game_t*);
 
 #endif
+

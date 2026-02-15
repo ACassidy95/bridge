@@ -7,12 +7,19 @@
 #define B_STD_HAND_SIZE         13
 #define B_STD_MIN_CARD_RANK     2
 #define B_STD_MAX_CARD_RANK     14
+#define B_STD_MAX_BID_RANK      7
 
 // Declare basic structures
 enum    suit;
+enum    bid_suit;
+
+struct  bid;
+struct  bid_table;
+struct  player_bid;
 struct  card;
 struct  cards;
-struct  player;
 struct  game;
+struct  player;
 
 #endif
+

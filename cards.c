@@ -217,3 +217,4 @@ card_t remove_card(cards_t* cards, enum remove_order order) {
 
         return card;
 }
+
