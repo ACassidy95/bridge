@@ -41,6 +41,12 @@ void cast_allocated_buffer(buffered_type_t type, void* buffer) {
         return;
 }
 
+void free_allocated_buffer(buffered_type_t type, void* buffer) {
+        cast_allocated_buffer(type, buffer);        
+        free(buffer);
+        buffer = NULL;
+}
+
 const char* get_user_input(const char* template) {
         char* buffer;
 
