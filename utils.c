@@ -4,6 +4,43 @@
 
 #define MAX_USER_INPUT_BUFFER_SIZE 32
 
+void allocate_buffer(buffered_type_t type, void* buffer, size_t elem_size, size_t len) {
+        if (!elem_size) {
+                quit("allocate_buffer: Provided element size 0. Cannot allocate buffer for elements of unknown size.");
+        }
+
+        if (!len) {
+                fprintf(stderr, "allocate_buffer: Provided len value 0. Setting to 1");
+                len += 1;
+        }
+
+        buffer = malloc(elem_size * len);
+        if (!buffer) {
+                quit("allocate_buffer: Buffer allocation faied.");   
+        }
+
+        cast_allocated_buffer(type, buffer);
+}
+
+void cast_allocated_buffer(buffered_type_t type, void* buffer) {
+        switch(type) {
+        case CHAR:
+                (char*)buffer;
+                break;
+        case BID_T:
+                (bid_t*)buffer;
+                break;
+        case CARD_T:
+                (card_t*)buffer;
+                break;
+        default:
+                fprintf(stderr, "Invalid buffer type. No cast performed.\n");
+                break;
+        }
+
+        return;
+}
+
 const char* get_user_input(const char* template) {
         char* buffer;
 
