@@ -1,8 +1,7 @@
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "utils.h"
-
-#define MAX_USER_INPUT_BUFFER_SIZE 32
 
 void allocate_buffer(buffered_type_t type, void* buffer, size_t elem_size, size_t len) {
         if (!elem_size) {
@@ -20,6 +19,7 @@ void allocate_buffer(buffered_type_t type, void* buffer, size_t elem_size, size_
         }
 
         cast_allocated_buffer(type, buffer);
+        return;
 }
 
 void cast_allocated_buffer(buffered_type_t type, void* buffer) {
@@ -45,16 +45,12 @@ void free_allocated_buffer(buffered_type_t type, void* buffer) {
         cast_allocated_buffer(type, buffer);        
         free(buffer);
         buffer = NULL;
+
+        return;
 }
 
-const char* get_user_input(const char* template) {
-        char* buffer;
-
-        buffer = (char*)malloc(MAX_USER_INPUT_BUFFER_SIZE + 1);
-        if (buffer == NULL) {
-                quit("Error allocating using user input buffer");
-        }
-
+// Adapted from Stroustrup - Learning C++ as a New Language, 1999
+void get_user_input(const char* message, char* buffer, size_t len) {
         printf("%s", template);
 
         while (1) {
@@ -76,7 +72,7 @@ const char* get_user_input(const char* template) {
                         buffer[i] = '\0';
                         break;
                 }
-                if (i == MAX_USER_INPUT_BUFFER_SIZE - 1) {
+                if (i == len - 1) {
                         buffer[i] = '\0';
                         break
                 }
@@ -84,7 +80,7 @@ const char* get_user_input(const char* template) {
                 ++i;
         }
 
-        return buffer;
+        return;
 }
 
 void quit(const char* err) {
@@ -92,4 +88,3 @@ void quit(const char* err) {
         exit(1);
 }
 
- input_error:
