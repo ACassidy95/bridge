@@ -9,7 +9,7 @@
 
 struct player{
         const char*     name;
-        cards_t*        hand;      
+        cards_t*        hand;
 };
 
 static struct player player_default = { NULL, NULL };
@@ -18,7 +18,7 @@ typedef struct player player_t;
 
 struct game{
         player_t*       players[B_STD_NUM_PLAYERS];
-        cards_t*        deck;      
+        cards_t*        deck;
 };
 
 static struct game game_default = { NULL, NULL };

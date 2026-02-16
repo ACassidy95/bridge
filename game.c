@@ -8,28 +8,27 @@
 void    deal_cards(cards_t*, player_t*[B_STD_NUM_PLAYERS]);
 
 // Player functions
-player_t* init_player(const char* name) {
+player_t* init_player(const char* name)
+{
         player_t*       p;
         char*           pname;
         cards_t*        phand;
 
         p = (player_t*)malloc(sizeof(player_t));
-        if(p == NULL) {
+        if(p == NULL)
                 return NULL;
-        }
 
         *p = player_default;
 
         pname = (char*)malloc(PLAYER_NAME_MAX_SIZE);
-        if(pname == NULL) {
+        if(pname == NULL)
                 return NULL;
-        }
+
         strncpy(pname, name, PLAYER_NAME_MAX_SIZE);
-        
+
         phand = init_card_collection(B_STD_HAND_SIZE);
-        if(phand == NULL) {
+        if(phand == NULL)
                 return NULL;
-        }
 
         p->name = pname;
         p->hand = phand;
@@ -37,7 +36,8 @@ player_t* init_player(const char* name) {
         return p;
 }
 
-void free_player(player_t* player) {
+void free_player(player_t* player)
+{
         free_card_collection(player->hand);
         player->hand = NULL;
 
@@ -49,7 +49,8 @@ void free_player(player_t* player) {
         return;
 }
 
-const char* player_info(player_t* player) {
+const char* player_info(player_t* player)
+{
         char*           buffer;
         const char*     hinfo;
         const char*     name;
@@ -62,9 +63,8 @@ const char* player_info(player_t* player) {
         buff_len = strlen(name) + strlen(hinfo) + 4 + 1;
 
         buffer = (char*)malloc(buff_len);
-        if (buffer == NULL) {
+        if (buffer == NULL)
                 return "\0";
-        }
 
         snprintf(buffer, buff_len, "%s | %s\n", name, hinfo);
 
@@ -72,29 +72,29 @@ const char* player_info(player_t* player) {
 }
 
 // Game function implementations
-game_t* init_game(player_t* players[B_STD_NUM_PLAYERS], cards_t* deck) {
+game_t* init_game(player_t* players[B_STD_NUM_PLAYERS], cards_t* deck)
+{
         game_t* g;
 
         g = (game_t*)malloc(sizeof(game_t));
-        if (g == NULL) {
+        if (g == NULL)
                 return NULL;
-        } 
         *g = game_default;
-        
-        for(size_t i = 0; i < B_STD_NUM_PLAYERS; ++i) {
+
+        for(size_t i = 0; i < B_STD_NUM_PLAYERS; ++i)
                 g->players[i] = players[i];
-        }
         g->deck = deck;
 
         return g;
 }
 
-void free_game(game_t* game) {
+void free_game(game_t* game)
+{
         for(size_t i = 0; i < B_STD_NUM_PLAYERS; ++i) {
                 free_player(game->players[i]);
                 game->players[i] = NULL;
         }
-        
+
         free_card_collection(game->deck);
         game->deck = NULL;
 
@@ -103,17 +103,17 @@ void free_game(game_t* game) {
         return;
 }
 
-const char* game_info(game_t* game) {
+const char* game_info(game_t* game)
+{
         char*   buffer;
         size_t  buff_len;
 
         buff_len = 0;
         for (size_t i = 0; i < B_STD_NUM_PLAYERS; ++i) {
                 const char* pi = player_info(game->players[i]);
-                if (strncmp(pi, "\0", 1) == 0) {
+                if (strncmp(pi, "\0", 1) == 0)
                         return "\0";
-                }
- 
+
                 buff_len += strlen(pi);
                 free((char*)pi);
                 pi=NULL;
@@ -121,9 +121,8 @@ const char* game_info(game_t* game) {
         buff_len += 1;
 
         buffer = (char*)malloc(buff_len);
-        if (buffer == NULL) {
+        if (buffer == NULL)
                 return "\0";
-        }
 
         for (size_t i = 0; i < B_STD_NUM_PLAYERS; ++i) {
                 const char* pi = player_info(game->players[i]);
@@ -131,8 +130,8 @@ const char* game_info(game_t* game) {
                         free(buffer);
                         return "\0";
                 }
- 
-                strncat(buffer, pi, strlen(pi)); 
+
+                strncat(buffer, pi, strlen(pi));
                 free((char*)pi);
                 pi=NULL;
         }
@@ -141,13 +140,13 @@ const char* game_info(game_t* game) {
         return buffer;
 }
 
-void play(game_t* game) {
+void play(game_t* game)
+{
         shuffle(game->deck);
         deal_cards(game->deck, game->players);
 
-        for (size_t i = 0; i < B_STD_NUM_PLAYERS; ++i) {
+        for (size_t i = 0; i < B_STD_NUM_PLAYERS; ++i)
                 sort(game->players[i]->hand);
-        }
 
         const char* ci = game_info(game);
         printf("%s\n", ci);
@@ -155,7 +154,8 @@ void play(game_t* game) {
         return;
 }
 
-void deal_cards(cards_t* deck, player_t* players[B_STD_NUM_PLAYERS]) {
+void deal_cards(cards_t* deck, player_t* players[B_STD_NUM_PLAYERS])
+{
         enum remove_order order = LAST;
 
         if (deck->size != B_STD_DECK_SIZE) {

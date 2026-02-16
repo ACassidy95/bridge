@@ -6,7 +6,8 @@
 
 // Card function implementations
 
-card_t init_card(uint8_t rank, suit_t suit) {
+card_t init_card(uint8_t rank, suit_t suit)
+{
         card_t c;
 
         c = card_default;
@@ -17,15 +18,16 @@ card_t init_card(uint8_t rank, suit_t suit) {
         return c;
 }
 
-const char* card_info(card_t card) {
+const char* card_info(card_t card)
+{
         char* buffer;
 
         buffer = (char*)malloc(CARD_INFO_BUFFER_SIZE);
-        if(buffer == NULL) {
+        if (buffer == NULL) {
                 return NULL;
         }
 
-        switch(card.rank) {
+        switch (card.rank) {
         case B_STD_MIN_CARD_RANK ... 10:
                 sprintf(buffer, "|%2d\\%2c|", card.rank, suit_info(card.suit));
                 break;
@@ -49,22 +51,33 @@ const char* card_info(card_t card) {
         return buffer;
 }
 
-const char suit_info(suit_t suit) {
-        switch(suit) {
-        case CLUBS:     return 'C';
-        case DIAMONDS:  return 'D';
-        case HEARTS:    return 'H';
-        case SPADES:    return 'S';
-        default:        return '\\';
+const char suit_info(suit_t suit)
+{
+	char c;
+
+        switch (suit) {
+        case CLUBS:
+		c = 'C';
+        case DIAMONDS:
+		c = 'D';
+        case HEARTS:
+		c = 'H';
+        case SPADES:
+		c = 'S';
+        default:
+		c = '\\';
         }
+
+	return c;
 }
 
 // Cards are compared on rank and suit
 // c1.suit > c2.suit                      => c1 > c2
 // c1.suit = c2.suit && c1.rank > c2.rank => c1 > c2
 //                   && c1.rank < c2.rank => c1 < c2
-// c1.suit < c2.suit                      => c2 > c1    
-static int cmp_cards(const void* c1, const void* c2) {
+// c1.suit < c2.suit                      => c2 > c1
+static int cmp_cards(const void* c1, const void* c2)
+{
         int cmp;
 
         card_t cd1 = *(card_t*)c1;
@@ -72,42 +85,41 @@ static int cmp_cards(const void* c1, const void* c2) {
 
         if (cd1.suit > cd2.suit) {
                 cmp = 1;
-        } else if (cd1.suit == cd2.suit) { 
-                if (cd1.rank > cd2.rank) {
+        } else if (cd1.suit == cd2.suit) {
+                if (cd1.rank > cd2.rank)
                         cmp = 1;
-                } else if (cd1.rank < cd2.rank) {
+                else if (cd1.rank < cd2.rank)
                         cmp = -1;
-                } else {
-                        // This shouldn't ever occur but needed to shut the static analyser up
-                        cmp = 0;
-                }
+                else
+                        cmp = 0
         } else {
                 cmp = -1;
         }
 
-        return cmp; 
+        return cmp;
 }
 
 // Card collection function implementations
-cards_t* init_card_collection(size_t capacity) {
+cards_t* init_card_collection(size_t capacity)
+{
         cards_t* c;
 
         c = (cards_t*)malloc(sizeof(cards_t));
-        if (c == NULL) {
+        if (c == NULL)
                 return NULL;
-        }        
+
         c->capacity = capacity;
         c->size = 0;
-        
+
         c->cards = (card_t*)malloc(sizeof(card_t) * capacity);
-        if (c->cards == NULL) {
+        if (c->cards == NULL)
                 return NULL;
-        }
 
         return c;
 }
 
-void free_card_collection(cards_t* cards) {
+void free_card_collection(cards_t* cards)
+{
         free(cards->cards);
         cards->cards = NULL;
 
@@ -115,21 +127,20 @@ void free_card_collection(cards_t* cards) {
         return;
 }
 
-const char* card_collection_info(cards_t* cards) {
+const char* card_collection_info(cards_t* cards)
+{
         char*   buffer;
         size_t  buff_len;
 
-        buff_len = cards->size * CARD_INFO_BUFFER_SIZE + 1; 
+        buff_len = cards->size * CARD_INFO_BUFFER_SIZE + 1;
         buffer = (char*)malloc(buff_len);
-        if(buffer == NULL) {
+        if(buffer == NULL)
                 return NULL;
-        }
 
         for(size_t i = 0; i < cards->size; ++i) {
                 const char* ci = card_info(cards->cards[i]);
-                if (ci == NULL) {
+                if (ci == NULL)
                         return NULL;
-                }
 
                 strncat(buffer, ci, CARD_INFO_BUFFER_SIZE);
                 free((char*)ci);
@@ -139,18 +150,21 @@ const char* card_collection_info(cards_t* cards) {
         return buffer;
 }
 
-void create_deck(cards_t* cards) {
+void create_deck(cards_t* cards)
+{
         if (cards->capacity < B_STD_DECK_SIZE) {
-                printf("Not enough space to create a deck. Have %zu, need %d", cards->capacity, B_STD_DECK_SIZE);
+                printf("Not enough space to create a deck. Have %zu, need %d",\
+		       cards->capacity, B_STD_DECK_SIZE);
                 return;
         }
 
         suit_t ns = NUM_SUITS;
-        for(size_t i = 0; i <= B_STD_MAX_CARD_RANK - B_STD_MIN_CARD_RANK; ++i) {
-                for(size_t j = 0; j < ns; ++j) {
-                        card_t c = init_card(i + B_STD_MIN_CARD_RANK, (suit_t)j);
+        for (size_t i = 0; i <= B_STD_MAX_CARD_RANK - B_STD_MIN_CARD_RANK; ++i) {
+                for (size_t j = 0; j < ns; ++j) {
+                        card_t c = init_card(i + B_STD_MIN_CARD_RANK,\
+					     (suit_t)j);
                         size_t idx = i * ns  + j;
-                        
+
                         cards->cards[idx] = c;
                         cards->size++;
                 }
@@ -159,10 +173,11 @@ void create_deck(cards_t* cards) {
         return;
 }
 
-void shuffle(cards_t* cards) {
+void shuffle(cards_t* cards)
+{
         int c1, c2;
         card_t tmp;
-        
+
         srand(time(NULL));
 
         for (size_t i = 0; i < cards->size; ++i) {
@@ -177,11 +192,13 @@ void shuffle(cards_t* cards) {
         return;
 }
 
-void sort(cards_t* cards) {
+void sort(cards_t* cards)
+{
         qsort(cards->cards, cards->size, sizeof(card_t), cmp_cards);
 }
 
-card_t deal(cards_t* cards) {
+card_t deal(cards_t* cards)
+{
         card_t card;
 
         card = card_default;
@@ -193,23 +210,24 @@ card_t deal(cards_t* cards) {
         return card;
 }
 
-void add_card(cards_t* cards, card_t card) {
+void add_card(cards_t* cards, card_t card)
+{
         cards->cards[cards->size] = card;
         cards->size++;
-        
-        return; 
+
+        return;
 }
 
-card_t remove_card(cards_t* cards, enum remove_order order) {
+card_t remove_card(cards_t* cards, enum remove_order order)
+{
         card_t card;
         size_t idx;
- 
+
         idx = 0;
-        if (order == FIRST) {
+        if (order == FIRST)
                 idx = 0;
-        } else if (order == LAST) {
+	else if (order == LAST)
                 idx = cards->size - 1;
-        }
 
         card = cards->cards[idx];
         cards->cards[idx] = card_default;

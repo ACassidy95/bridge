@@ -3,7 +3,9 @@
 #include <stdlib.h>
 #include "utils.h"
 
-void allocate_buffer(buffered_type_t type, void* buffer, size_t elem_size, size_t len) {
+void allocate_buffer(buffered_type_t type, void* buffer, size_t elem_size,\
+		     size_t len)
+{
         if (!elem_size) {
                 quit("allocate_buffer: Provided element size 0. Cannot allocate buffer for elements of unknown size.");
         }
@@ -15,14 +17,15 @@ void allocate_buffer(buffered_type_t type, void* buffer, size_t elem_size, size_
 
         buffer = malloc(elem_size * len);
         if (!buffer) {
-                quit("allocate_buffer: Buffer allocation faied.");   
+                quit("allocate_buffer: Buffer allocation faied.");
         }
 
         cast_allocated_buffer(type, buffer);
         return;
 }
 
-void cast_allocated_buffer(buffered_type_t type, void* buffer) {
+void cast_allocated_buffer(buffered_type_t type, void* buffer)
+{
         switch(type) {
         case CHAR:
                 (char*)buffer;
@@ -41,8 +44,9 @@ void cast_allocated_buffer(buffered_type_t type, void* buffer) {
         return;
 }
 
-void free_allocated_buffer(buffered_type_t type, void* buffer) {
-        cast_allocated_buffer(type, buffer);        
+void free_allocated_buffer(buffered_type_t type, void* buffer)
+{
+        cast_allocated_buffer(type, buffer);
         free(buffer);
         buffer = NULL;
 
@@ -50,7 +54,8 @@ void free_allocated_buffer(buffered_type_t type, void* buffer) {
 }
 
 // Adapted from Stroustrup - Learning C++ as a New Language, 1999
-void get_user_input(const char* message, char* buffer, size_t len) {
+void get_user_input(const char* message, char* buffer, size_t len)
+{
         printf("%s", template);
 
         while (1) {
@@ -83,7 +88,8 @@ void get_user_input(const char* message, char* buffer, size_t len) {
         return;
 }
 
-void quit(const char* err) {
+void quit(const char* err)
+{
         fprintf(stderr, "%s\n", err);
         exit(1);
 }

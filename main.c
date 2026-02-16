@@ -11,7 +11,7 @@ int main() {
         const char*     gi;
 
         printf("Hello Bridge Players!\n");
-        
+
         deck = init_card_collection(B_STD_DECK_SIZE);
         create_deck(deck);
         for (size_t i = 0; i < B_STD_NUM_PLAYERS; ++i) {
@@ -22,7 +22,7 @@ int main() {
         }
 
         game = init_game(players, deck);
-        
+
         printf("Let's Begin!\n");
         play(game);
 
